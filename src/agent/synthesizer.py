@@ -3,19 +3,22 @@ class Synthesizer:
         self.llm = llm_client
 
     def generate(self, query: str, context: list[dict]) -> str:
-        context_text = "\n".join([c["text"] for c in context])
+        context_text = "\n\n".join([c["text"] for c in context])
 
         prompt = f"""
-        You are a research assistant.
+        You MUST answer ONLY using the provided context.
+        Do NOT use prior knowledge.
 
-        Answer the query using the context below.
+        If the context is insufficient, explicitly say:
+        "Insufficient information in provided context."
 
-        Query: {query}
+        Query:
+        {query}
 
         Context:
         {context_text}
 
-        Provide a structured and concise answer.
+        Provide a structured answer.
         """
 
         return self.llm.generate(prompt)

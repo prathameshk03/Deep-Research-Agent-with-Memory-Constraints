@@ -4,8 +4,11 @@ class Decomposer:
 
     def decompose(self, query: str) -> list[str]:
         prompt = f"""
-        Break the following query into 3-5 focused sub-questions:
+        Break the following query into 3-5 clear, non-overlapping sub-questions.
+
         Query: {query}
+
+        Return ONLY a numbered list.
         """
 
         response = self.llm.generate(prompt)
@@ -13,6 +16,18 @@ class Decomposer:
         return self._parse_response(response)
 
     def _parse_response(self, response: str) -> list[str]:
-        # Convert numbered list → Python list
         lines = response.split("\n")
-        return [line.strip() for line in lines if line.strip()]
+        cleaned = []
+
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+
+            # remove numbering like "1. "
+            if "." in line:
+                line = line.split(".", 1)[-1].strip()
+
+            cleaned.append(line)
+
+        return cleaned[:5]
