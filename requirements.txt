@@ -1,0 +1,7 @@
+groq
+sentence-transformers
+chromadb
+fastapi
+uvicorn
+python-dotenv
+tiktoken
